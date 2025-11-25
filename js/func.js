@@ -1,3 +1,5 @@
+import { state } from "./variables.js";
+
 export function initializeEmptyBoard(map, size) {
     // create 2d array to represent game board
     for (let i = 0; i < size; i++) {
@@ -72,20 +74,21 @@ function canPlaceShip(map, startX, startY, orientation, shipLength, size) {
 }
 
 
-export function renderGameboard(size, container, map, ships) {
+export function renderGameboard(size, container, map, ships, player) {
     // create cell divs based on grid size
     for (let i = 0; i < size * size; i++) {
         const cell = document.createElement('button');
         cell.classList.add('cell');
-        // create id with cell coordinates (matching map coordinates)
-        cell.id = `${Math.floor(i / size)}-${i % size}`;
+        // create data-id with cell coordinates (matching map coordinates)
+        // (using data-id instead of if because player1 and player2 share the same coordinates)
+        cell.setAttribute('data-id', `${Math.floor(i / size)}-${i % size}`);
         container.appendChild(cell);
-        cell.onclick = (e) => handleCell(e, map, ships);  
+        cell.onclick = (e) => handleCell(e, map, ships, player);  
     }
 }
 
-function handleCell(e, map, ships) { 
-    const id = e.target.id;
+function handleCell(e, map, ships, player) { 
+    const id = e.target.dataset.id;
     // retrieve coordinates from id
     const x = id.split('-')[0];
     const y = id.split('-')[1];
@@ -93,6 +96,11 @@ function handleCell(e, map, ships) {
     if (map[x][y] === '-') {
         e.target.classList.add('empty'); // visual feedback
         soundEffect(false);
+        if (state.mode !== 'solo') {
+            setTimeout(() => {
+                changeTurn(player);
+            }, 800);
+        };
     } else if (map[x][y] === 'S') {
         e.target.classList.add('sunk');  // visual feedback
         soundEffect(true); 
@@ -103,33 +111,35 @@ function handleCell(e, map, ships) {
 
         // if ship is completely sunk cross it out from score board
         if (ship.hits === ship.length) {
-            const p = Array.from(document.querySelectorAll('.ship')).find(p => p.id === ship.name);
+            const p = Array.from(document.querySelectorAll('.ship')).find(p => p.id  === `${ship.name}-${player}`);
             p.classList.add('completed');
             ship.sunk = true; // update sunk state in ship object
 
             if (gameOver(ships)) {
                 setTimeout(() => {
-                    handleGameOver();
+                    document.getElementById('game-over').classList.remove('hide');
+                    document.getElementById('winner').textContent = state.playerTurn.replace('-', ' ');
                 }, 700);
             }
         };
     } else if (map[x][y] = 'X') {
         return;
     }
+    e.target.classList.add('deactivated');
 }
 
 function gameOver(ships) {
     return ships.every(ship => ship.sunk); // game ends when all ships are sunk
 }
 
-export function scoreBoard(ships) {
+export function scoreBoard(ships, container, player) {
     // display name and length for each ship in the scoreboard
     ships.forEach(ship => {
         const p = document.createElement('div');
         p.innerHTML = `${ship.name} (${ship.length})`;
-        p.id = ship.name;
+        p.id = `${ship.name}-${player}`;
         p.classList.add('ship');
-        document.querySelector('.ships').appendChild(p);
+        container.appendChild(p);
     })
 }
 
@@ -137,6 +147,7 @@ export function reset(map, ships, size) {
     resetVirtualMap(map, size);
     resetVisualMap();
     resetShips(ships);
+    changeTurn('player-2'); // reset to player-1
     
     placeShips(ships, map, size); // place new ships
 
@@ -168,7 +179,7 @@ function resetScoreboard() {
 }
 
 function handleGameOver() {
-    document.getElementById('game-over').classList.toggle('hide');
+    document.getElementById('game-over').classList.add('hide');
 }
 
 function soundEffect(hit) {
@@ -179,4 +190,27 @@ function soundEffect(hit) {
 
 function isAudioOn() {
     return document.getElementById('sound-toggle').checked;
+}
+
+function changeTurn(player) {
+    document.querySelector(`.container.${player}`).classList.remove('player-turn');
+    document.querySelector(`.container.${player}`).classList.add('deactivated');
+    state.playerTurn = player === 'player-1' ? 'player-2' : 'player-1';
+
+    document.querySelector(`.container.${state.playerTurn}`).classList.add('player-turn');
+    document.querySelector(`.container.${state.playerTurn}`).classList.remove('deactivated');
+
+    if (state.playerTurn === 'player-2' && state.mode === 'computer') {
+        document.querySelector(`.container.player-2`).classList.add('deactivated');
+        handleComputerMove();
+    }
+}
+
+function handleComputerMove() {
+    // select a random move
+    // if miss change turn
+    // if hit select one more random move
+    // check if any of the 4 corners of the previous move are available
+    // if yes select a random one of them (should keep "thinking" like a human... keep going horizontally or vertically... no idea how to do that)
+    // else select another random move
 }

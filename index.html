@@ -25,14 +25,36 @@
             </div>
         </header>
 
-        <div class="container"></div>
+        <section class="mode">
+            <input type="radio" name="mode" id="solo"  value="solo" checked>
+            <label for="solo">solo</label>
 
-        <div class="ships"></div>
+            <input type="radio" name="mode" id="2-players" value="2-players">
+            <label for="2-players">2 giocatori</label>
+
+            <input type="radio" name="mode" id="computer" value="computer">
+            <label for="computer">gioca contro il computer</label>
+        </section>
+
+        <section class="game-section">
+           <div class="container player-1 player-turn">
+             <h2>Player 1</h2>
+             <div class="map player-1"></div>
+             <div class="ships player-1"></div>  
+           </div>
+
+           <div class="container player-2 hide deactivated">
+             <h2>Player 2</h2>
+             <div class="map player-2"></div>  
+             <div class="ships player-2"></div>
+           </div>
+        </section>
 
         <button id="reset">reset</button>
 
         <div id="game-over" class="hide">
             <p>game over!</p>
+            <p>vincitore: <span id="winner"></span></p>
             <button id="play-again">gioca ancora</button>
         </div>
     </main>
