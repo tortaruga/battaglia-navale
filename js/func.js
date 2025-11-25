@@ -122,7 +122,7 @@ export function scoreBoard(ships) {
     // display name and length for each ship in the scoreboard
     ships.forEach(ship => {
         const p = document.createElement('div');
-        p.innerHTML = `${ship.name}: ${ship.length}`;
+        p.innerHTML = `${ship.name} (${ship.length})`;
         p.id = ship.name;
         p.classList.add('ship');
         document.querySelector('.ships').appendChild(p);
@@ -141,7 +141,7 @@ export function reset(map, ships, size) {
 }
 
 function resetVirtualMap(map, size) {
-    map = [];
+    map.length = 0;
     initializeEmptyBoard(map, size);
 }
 
@@ -154,7 +154,7 @@ function resetVisualMap() {
 function resetShips(ships) {
     ships.forEach(ship => { 
         ship.positions = [];
-        ships.hits = 0;
+        ship.hits = 0;
         ship.sunk = false;
     })
 }
