@@ -18,3 +18,4 @@ renderGameboard(size, document.querySelector('.container'), map, ships); // rend
 scoreBoard(ships); // keep track of which ships have been sunk
 
 document.getElementById('reset').addEventListener('click', () => reset(map, ships, size)); // reset game
+

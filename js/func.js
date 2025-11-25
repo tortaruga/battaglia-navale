@@ -92,8 +92,10 @@ function handleCell(e, map, ships) {
 
     if (map[x][y] === '-') {
         e.target.classList.add('empty'); // visual feedback
+        soundEffect(false);
     } else if (map[x][y] === 'S') {
         e.target.classList.add('sunk');  // visual feedback
+        soundEffect(true); 
         map[x][y] = 'X'; // update virtual map
         // increase hit count in the corresponding ship object
         const ship = ships.find(ship => ship.positions.includes(id));
@@ -163,4 +165,9 @@ function resetScoreboard() {
 
 function handleGameOver() {
     document.getElementById('game-over').classList.toggle('hide');
+}
+
+function soundEffect(hit) {
+    let audio = hit ? new Audio('../assets/audio/hit.mp3') : new Audio('../assets/audio/miss.mp3');
+    audio.play();
 }
