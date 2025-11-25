@@ -1,4 +1,4 @@
-const map = [];
+let map = [];
 const size = 10;
 
 function initializeEmptyBoard() {
@@ -136,3 +136,32 @@ scoreBoard();
 function gameOver() {
     return ships.every(ship => ship.sunk);
 }
+
+function reset() {
+    // reset virtual map
+    map = [];
+    initializeEmptyBoard();
+
+    // reset visual map
+    document.querySelectorAll('.cell').forEach(cell => {
+        cell.className = 'cell';
+    })
+
+    // reset ships positions and states
+    ships.forEach(ship => {
+        ship.positions = [];
+        ships.hits = 0;
+        ship.sunk = false;
+    })
+
+    // place new ships
+    placeShips(ships);
+
+    // reset scoreBoard
+    document.querySelectorAll('.ship').forEach(p => p.classList.remove('completed'));
+
+    // hide game over message
+    document.getElementById('game-over').classList.add('hide');
+}
+
+document.getElementById('reset').addEventListener('click', reset);
