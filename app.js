@@ -17,11 +17,12 @@ initializeEmptyBoard();
 
 
 const ships = [
-  { name: "Portaerei", length: 5},
-  { name: "Incrociatore", length: 4},
-  { name: "Sottomarino", length: 3},
-  { name: "Cacciatorpediniere", length: 2}
+  { name: "Portaerei", length: 5, positions: [], hits: 0, sunk: false},
+  { name: "Incrociatore", length: 4, positions: [], hits: 0, sunk: false},
+  { name: "Sottomarino", length: 3, positions: [], hits: 0, sunk: false},
+  { name: "Cacciatorpediniere", length: 2, positions: [], hits: 0, sunk: false}
 ];
+
 
 // for each ship in ships:
 //   do:
@@ -47,10 +48,12 @@ function placeShips(ships) {
         if (orientation === 'vertical') {
             for (let i = startX; i < startX + ship.length; i++) {
                 map[i][startY] = 'S';
+                ship.positions.push(`${i}-${startY}`);
             }
         } else {
             for (let i = startY; i < startY + ship.length; i++) {
                 map[startX][i] = 'S';
+                ship.positions.push(`${startX}-${i}`);
             }
         }
     }
@@ -101,8 +104,35 @@ function handleCell(e) {
     } else if (map[x][y] === 'S') {
         e.target.classList.add('sunk');
         map[x][y] = 'X';
-      
+        const ship = ships.find(ship => ship.positions.includes(id));
+        ship.hits++;
+
+        if (ship.hits === ship.length) {
+            const p = Array.from(document.querySelectorAll('.ship')).find(p => p.id === ship.name);
+            p.classList.add('completed');
+            ship.sunk = true;
+
+            if (gameOver()) {
+                document.getElementById('game-over').classList.remove('hide');
+            }
+        };
     } else if (map[x][y] = 'X') {
         return;
     }
+}
+
+function scoreBoard() {
+    ships.forEach(ship => {
+        const p = document.createElement('div');
+        p.innerHTML = `${ship.name}: ${ship.length}`;
+        p.id = ship.name;
+        p.classList.add('ship');
+        document.querySelector('.ships').appendChild(p);
+    })
+}
+
+scoreBoard(); 
+
+function gameOver() {
+    return ships.every(ship => ship.sunk);
 }

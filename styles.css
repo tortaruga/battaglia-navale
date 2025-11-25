@@ -23,3 +23,14 @@
 .cell.sunk {
     background-color: blueviolet;
 }
+
+.completed {
+    color: grey;
+    text-decoration: line-through;
+    text-decoration-color: grey; 
+}
+
+.hide {
+    display: none; 
+}
+
