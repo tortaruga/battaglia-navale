@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+ 
+.container {
+    width: calc(200px + (0.5px * 3.5));        
+    height: calc(200px + (0.5px * 3.5)); 
+    border: 1px solid black;
+    display: flex;
+    flex-wrap: wrap; 
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+}
+
+.cell.empty {
+    background-color: aquamarine;
+}
+
+.cell.sunk {
+    background-color: blueviolet;
+}

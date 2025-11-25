@@ -78,3 +78,31 @@ function canPlaceShip(map, startX, startY, orientation, shipLength) {
 
     return true;
 }
+
+
+function renderGameboard() {
+    for (let i = 0; i < size * size; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.id = `${Math.floor(i / size)}-${i % size}`;
+        document.querySelector('.container').appendChild(cell);
+        cell.onclick = handleCell;  
+    }
+}
+renderGameboard(); 
+
+function handleCell(e) { 
+    const id = e.target.id;
+    const x = id.split('-')[0];
+    const y = id.split('-')[1];
+
+    if (map[x][y] === '-') {
+        e.target.classList.add('empty');
+    } else if (map[x][y] === 'S') {
+        e.target.classList.add('sunk');
+        map[x][y] = 'X';
+      
+    } else if (map[x][y] = 'X') {
+        return;
+    }
+}
