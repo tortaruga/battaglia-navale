@@ -11,6 +11,18 @@
     <main>
         <header>
             <h1>battaglia navale</h1>
+            <button aria-label="open settings" id="settings">
+                <img src="./assets/settings.svg" alt="settings icon">
+            </button>
+
+            <div class="settings hide">
+                <p id="sound-settings-toggle">audio effects: </p>
+
+                <label class="switch" for="sound-toggle">
+                    <input type="checkbox" checked id="sound-toggle" aria-labelledby="sound-settings-toggle"> 
+                    <span class="slider"></span> 
+                </label> 
+            </div>
         </header>
 
         <div class="container"></div>

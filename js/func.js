@@ -75,7 +75,7 @@ function canPlaceShip(map, startX, startY, orientation, shipLength, size) {
 export function renderGameboard(size, container, map, ships) {
     // create cell divs based on grid size
     for (let i = 0; i < size * size; i++) {
-        const cell = document.createElement('div');
+        const cell = document.createElement('button');
         cell.classList.add('cell');
         // create id with cell coordinates (matching map coordinates)
         cell.id = `${Math.floor(i / size)}-${i % size}`;
@@ -107,7 +107,11 @@ function handleCell(e, map, ships) {
             p.classList.add('completed');
             ship.sunk = true; // update sunk state in ship object
 
-            if (gameOver(ships)) handleGameOver();
+            if (gameOver(ships)) {
+                setTimeout(() => {
+                    handleGameOver();
+                }, 700);
+            }
         };
     } else if (map[x][y] = 'X') {
         return;
@@ -169,5 +173,10 @@ function handleGameOver() {
 
 function soundEffect(hit) {
     let audio = hit ? new Audio('../assets/audio/hit.mp3') : new Audio('../assets/audio/miss.mp3');
-    audio.play();
+    
+    if (isAudioOn()) audio.play();
+}
+
+function isAudioOn() {
+    return document.getElementById('sound-toggle').checked;
 }

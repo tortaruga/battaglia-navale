@@ -20,4 +20,6 @@ scoreBoard(ships); // keep track of which ships have been sunk
 document.getElementById('reset').addEventListener('click', () => reset(map, ships, size)); // reset game
 document.getElementById('play-again').addEventListener('click', () => reset(map, ships, size)); 
 
- 
+document.getElementById('settings').addEventListener('click', () => {
+    document.querySelector('.settings').classList.toggle('hide');
+})
