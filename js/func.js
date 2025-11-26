@@ -125,7 +125,7 @@ function handleCell(e, map, ships, player) {
     } else if (map[x][y] = 'X') {
         return;
     }
-    e.target.classList.add('deactivated');
+    e.target.disabled = true;
 }
 
 function gameOver(ships) {
@@ -163,6 +163,7 @@ function resetVirtualMap(map, size) {
 function resetVisualMap() {
     document.querySelectorAll('.cell').forEach(cell => {
         cell.className = 'cell';
+        cell.disabled = false;
     })
 }
 
@@ -200,10 +201,18 @@ function changeTurn(player) {
     document.querySelector(`.container.${state.playerTurn}`).classList.add('player-turn');
     document.querySelector(`.container.${state.playerTurn}`).classList.remove('deactivated');
 
+    handleKeyboardInteractions();
+
     if (state.playerTurn === 'player-2' && state.mode === 'computer') {
         document.querySelector(`.container.player-2`).classList.add('deactivated');
         handleComputerMove();
     }
+}
+
+function handleKeyboardInteractions() {
+    document.querySelectorAll('.container:not(.player-turn) .cell').forEach(cell => cell.disabled = true);
+    document.querySelectorAll('.container.player-turn .cell').forEach(cell => cell.disabled = false);
+
 }
 
 function handleComputerMove() {
