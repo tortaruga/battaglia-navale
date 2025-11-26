@@ -1,4 +1,6 @@
-import { state } from "./variables.js";
+import { player2Map, player2Ships, size, state } from "./variables.js";
+
+const currentShipHits = [];
 
 export function initializeEmptyBoard(map, size) {
     // create 2d array to represent game board
@@ -95,6 +97,7 @@ function handleCell(e, map, ships, player) {
 
     if (map[x][y] === '-') {
         e.target.classList.add('empty'); // visual feedback
+        map[x][y] = 'X'; // update virtual map
         soundEffect(false);
         if (state.mode !== 'solo') {
             setTimeout(() => {
@@ -152,6 +155,7 @@ export function reset(map, ships, size) {
     placeShips(ships, map, size); // place new ships
 
     resetScoreboard(); 
+    currentShipHits.length = 0;
     handleGameOver(); // hide gameover message
 }
 
@@ -205,7 +209,10 @@ function changeTurn(player) {
 
     if (state.playerTurn === 'player-2' && state.mode === 'computer') {
         document.querySelector(`.container.player-2`).classList.add('deactivated');
-        handleComputerMove();
+
+        setTimeout(() => {
+            handleComputerMove(player2Map, size, player2Ships);
+        }, 1000);
     }
 }
 
@@ -215,11 +222,158 @@ function handleKeyboardInteractions() {
 
 }
 
-function handleComputerMove() {
-    // select a random move
-    // if miss change turn
-    // if hit select one more random move
-    // check if any of the 4 corners of the previous move are available
-    // if yes select a random one of them (should keep "thinking" like a human... keep going horizontally or vertically... no idea how to do that)
-    // else select another random move
+function huntMode(map, size) {
+    let randomX;
+    let randomY; 
+
+    do {
+        randomX = Math.floor(Math.random() * size);
+        randomY = Math.floor(Math.random() * size);
+    } while (map[randomX][randomY] === 'X');
+
+    return [randomX, randomY];
+}
+
+function targetMode(map, size) {
+    let randomX;
+    let randomY;
+
+    const lastHitX = currentShipHits[0][0]; 
+    const lastHitY = currentShipHits[0][1]; 
+
+    // 4 adject cells to the last hit 
+    const possibleMoves = [[lastHitX + 1, lastHitY],
+                            [lastHitX - 1, lastHitY],
+                            [lastHitX, lastHitY - 1],
+                            [lastHitX, lastHitY + 1]];
+
+    // filter 4 adject cells to remove those out of map boundaries                        
+    const validMoves = possibleMoves.filter(([x, y]) => {
+           return (x >= 0 && x < size && y >= 0 && y < size);
+    });
+
+    do {
+        const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+        randomX = randomMove[0];
+        randomY = randomMove[1];
+    } while (!map[randomX][randomY] || map[randomX][randomY] === 'X');
+
+    return [randomX, randomY];
+}
+
+function orientationMode(map, size) {
+    let randomX;
+    let randomY;
+
+    if (currentShipHits[0][0] === currentShipHits[1][0]) {
+        // hit cells share the same X coordinate --> ship is horizontal
+        // only possible moves are [x, firstY - 1] and [x, lastY + 1]
+        const firstHitY = currentShipHits[0][1]; 
+        const x = currentShipHits[0][0]; 
+        const lastHitY = currentShipHits[currentShipHits.length - 1][1]; 
+
+        const possibleMoves = [[x, firstHitY - 1], [x, lastHitY + 1]];
+        const validMoves = possibleMoves.filter(([x, y]) => x < size && x >= 0 && y < size && y >= 0 && map[x][y] !== 'X');
+    
+        const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+
+        randomX = randomMove[0];
+        randomY = randomMove[1];
+        
+    } else if (currentShipHits[0][1] === currentShipHits[1][1]) {
+        // hit cells share the same Y coordinate --> ship is vertical
+        // only possible moves are [lastX + 1, y] and [firsX - 1, y];
+        const firstHitX = currentShipHits[0][0]; 
+        const y = currentShipHits[0][1]; 
+        const lastHitX = currentShipHits[currentShipHits.length - 1][0]; 
+
+        const possibleMoves = [[firstHitX - 1, y], [lastHitX + 1, y]];
+        // filter moves out of boundaries
+        const validMoves = possibleMoves.filter(([x, y]) => x < size && x >= 0 && y < size && y >= 0 && map[x][y] !== 'X');
+
+        const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)]
+        randomX = randomMove[0];
+        randomY = randomMove[1];
+    }
+
+    return [randomX, randomY];
+}
+
+function handleComputerMove(map, size, ships) {
+    let x; 
+    let y;
+    let move;
+
+    // hunt mode: random moves until you get a hit
+    if (currentShipHits.length === 0) move = huntMode(map, size);
+
+    // target mode: one hit --> select random adjacent cell until you get second hit
+    if (currentShipHits.length === 1) move = targetMode(map, size);
+
+    // orientation mode: now we know the orientation (how??) --> keep guessing in 2 directions 
+    if (currentShipHits.length > 1) move = orientationMode(map, size);
+
+    
+    x = move[0];
+    y = move[1];
+
+    const cellSelected = document.querySelector(`.container.player-2 .cell[data-id="${x}-${y}"]`);
+
+    if (map[x][y] === '-') {
+        // computer misses
+        map[x][y] = 'X'; // update virtual map;
+        cellSelected.classList.add('empty'); // visual feedback;
+        soundEffect(false); // play sound;
+        setTimeout(() => {
+            changeTurn('player-2');
+        }, 800);
+    } else if (map[x][y] === 'S') {
+        // computer hits;
+        currentShipHits.push([x, y]); // add move to current hits
+        sortArray(currentShipHits); // sort current hits by index
+        map[x][y] = 'X'; // update virtual map
+        soundEffect(true); // play sound
+        cellSelected.classList.add('sunk');
+
+        const ship = ships.find(ship => ship.positions.includes(`${x}-${y}`));
+        ship.hits++;
+
+        if (ship.hits === ship.length) {
+            const p = Array.from(document.querySelectorAll('.ship')).find(p => p.id  === `${ship.name}-player-2`);
+            p.classList.add('completed');
+            ship.sunk = true; // update sunk state in ship object
+        
+            currentShipHits.length = 0;
+
+            if (gameOver(ships)) {
+                setTimeout(() => {
+                    document.getElementById('game-over').classList.remove('hide');
+                    document.getElementById('winner').textContent = state.playerTurn.replace('-', ' ');
+                }, 700);
+            }
+        };
+
+        if (!gameOver(ships)) {
+            setTimeout(() => {
+                changeTurn('player-1');
+            }, 800);
+        }
+    }
+}
+
+
+// keep track of last move
+// select a random possible corner move
+// keep track of vertical or horizontal
+// keep track of whether whole ship was sunk
+
+function sortArray(arr) {
+    arr.sort((a, b) => {
+  if (a[0] === b[0]) {
+    // if x is the same, sort by y
+    return a[1] - b[1];
+  }
+  // otherwise sort by x
+  return a[0] - b[0];
+});
 }
