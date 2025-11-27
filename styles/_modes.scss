@@ -1,0 +1,31 @@
+.mode {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    font-weight: bold; 
+    color: gray;   
+
+    label {
+        padding: .3rem 1.5rem;
+        border-radius: .3rem;
+        background-color: rgb(227, 227, 227);
+        cursor: pointer;
+    }
+
+    input {
+        margin: 0;
+        width: 0;
+        
+        &:focus + label {
+            outline: 1px solid white; 
+        }
+    }
+
+    input:checked + label {
+        background-color: rgb(25, 9, 103); 
+        color: whitesmoke;  
+    }
+}

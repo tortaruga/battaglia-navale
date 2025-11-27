@@ -1,0 +1,130 @@
+/* game section */
+.game-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6rem;
+    margin-bottom: 3rem;
+}
+
+.container {
+    text-align: center;
+    background-color: rgb(252, 246, 246);
+    padding: 1rem;
+    border-radius: .3rem;
+    opacity: .5;
+    transition: .5s;
+
+    h2 {
+        padding: .25rem;
+        border-radius: .3rem;
+    }
+}
+
+.container.player-1 h2 { 
+    background-color: salmon;  
+    color: whitesmoke;
+}
+
+.container.player-2 h2 { 
+    background-color: skyblue; 
+    color: whitesmoke; 
+}
+
+.deactivated {
+    pointer-events: none;
+}
+
+.container.player-turn {
+    opacity: 1;
+}
+
+.map {
+    width: calc(300px + (0.05rem * 9));        
+    height: calc(300px + (0.05rem * 9)); 
+    display: flex;
+    gap: .05rem;
+    flex-wrap: wrap; 
+    margin: auto;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(209, 209, 209);
+    border-radius: .1rem;
+    cursor: pointer;
+}
+
+.cell.empty {
+    background-color: lightblue; 
+}
+
+.cell.sunk {
+    background-color: lightseagreen; 
+}
+
+.completed {
+    color: grey;
+    text-decoration: line-through;
+    text-decoration-color: grey; 
+}
+
+.hide {
+    display: none; 
+}
+
+.ships {
+    width: 300px;
+    margin: 2rem auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    font-size: .8rem;
+    font-weight: bold;
+    color: rgb(25, 9, 103);
+}
+
+#reset,
+#play-again {
+    display: block;
+    margin-inline: auto;
+    font-family: inherit;
+    border: none;
+    padding: .4rem 1.6rem;
+    background-color: rgb(25, 9, 103);
+    border-radius: .3rem;
+    color: whitesmoke;
+}
+
+#game-over:not(.hide) {
+    background-color: rgb(226, 226, 226);
+    border-radius: .2rem;
+    box-shadow: .3rem .4rem 5px rgba(0, 0, 0, 0.229);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    flex-direction: column;
+} 
+
+.red {
+    color: salmon;
+    font-family: oswald;
+    font-weight: normal; 
+    text-transform: uppercase; 
+}
+
+#winner {
+    color: lightseagreen;
+    font-weight: bold;
+    font-family: oswald, sans-serif;
+}

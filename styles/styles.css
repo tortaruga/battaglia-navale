@@ -1,0 +1,284 @@
+header {
+  background-color: rgb(230, 229, 229);
+  padding: 0.5rem;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+header h1 {
+  margin: 0;
+  font-family: oswald, sans-serif;
+  text-transform: uppercase;
+  color: rgb(25, 9, 103);
+}
+header button {
+  background-color: rgb(245, 245, 245);
+  border-radius: 50%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+header img {
+  width: 1.3rem;
+}
+
+.settings:not(.hide) {
+  background-color: rgb(236, 236, 236);
+  position: absolute;
+  top: 95%;
+  right: 1%;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  width: 90%;
+  max-width: 300px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.229);
+  z-index: 9;
+  font-size: 0.8rem;
+}
+.settings:not(.hide) div {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.settings:not(.hide) h3 {
+  color: rgb(25, 9, 103);
+  font-family: oswald, sans-serif;
+  margin-bottom: 0;
+}
+.settings:not(.hide) a {
+  color: lightseagreen;
+}
+.settings:not(.hide) #close-settings {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  background-color: grey;
+  border-radius: 1rem;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 80%;
+  aspect-ratio: 1;
+  left: 4px;
+  bottom: 2px;
+  background-color: rgb(25, 9, 103);
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: skyblue;
+}
+
+input:focus + .slider {
+  outline: 2px solid rgb(25, 9, 103);
+  box-shadow: 0 0 1px skyblue;
+}
+
+input:checked + .slider:before {
+  background-color: grey;
+  transform: translateX(26px);
+}
+
+.mode {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  color: gray;
+}
+.mode label {
+  padding: 0.3rem 1.5rem;
+  border-radius: 0.3rem;
+  background-color: rgb(227, 227, 227);
+  cursor: pointer;
+}
+.mode input {
+  margin: 0;
+  width: 0;
+}
+.mode input:focus + label {
+  outline: 1px solid white;
+}
+.mode input:checked + label {
+  background-color: rgb(25, 9, 103);
+  color: whitesmoke;
+}
+
+/* game section */
+.game-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6rem;
+  margin-bottom: 3rem;
+}
+
+.container {
+  text-align: center;
+  background-color: rgb(252, 246, 246);
+  padding: 1rem;
+  border-radius: 0.3rem;
+  opacity: 0.5;
+  transition: 0.5s;
+}
+.container h2 {
+  padding: 0.25rem;
+  border-radius: 0.3rem;
+}
+
+.container.player-1 h2 {
+  background-color: salmon;
+  color: whitesmoke;
+}
+
+.container.player-2 h2 {
+  background-color: skyblue;
+  color: whitesmoke;
+}
+
+.deactivated {
+  pointer-events: none;
+}
+
+.container.player-turn {
+  opacity: 1;
+}
+
+.map {
+  width: calc(300px + 0.45rem);
+  height: calc(300px + 0.45rem);
+  display: flex;
+  gap: 0.05rem;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  background-color: rgb(209, 209, 209);
+  border-radius: 0.1rem;
+  cursor: pointer;
+}
+
+.cell.empty {
+  background-color: lightblue;
+}
+
+.cell.sunk {
+  background-color: lightseagreen;
+}
+
+.completed {
+  color: grey;
+  text-decoration: line-through;
+  text-decoration-color: grey;
+}
+
+.hide {
+  display: none;
+}
+
+.ships {
+  width: 300px;
+  margin: 2rem auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: rgb(25, 9, 103);
+}
+
+#reset,
+#play-again {
+  display: block;
+  margin-inline: auto;
+  font-family: inherit;
+  border: none;
+  padding: 0.4rem 1.6rem;
+  background-color: rgb(25, 9, 103);
+  border-radius: 0.3rem;
+  color: whitesmoke;
+}
+
+#game-over:not(.hide) {
+  background-color: rgb(226, 226, 226);
+  border-radius: 0.2rem;
+  box-shadow: 0.3rem 0.4rem 5px rgba(0, 0, 0, 0.229);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  flex-direction: column;
+}
+
+.red {
+  color: salmon;
+  font-family: oswald;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+#winner {
+  color: lightseagreen;
+  font-weight: bold;
+  font-family: oswald, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: montserrat, sans-serif;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+}
+
+main {
+  margin-bottom: 3rem;
+}/*# sourceMappingURL=styles.css.map */

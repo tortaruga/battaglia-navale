@@ -313,7 +313,6 @@ function handleComputerMove(map, size, ships) {
     // orientation mode: now we know the orientation (how??) --> keep guessing in 2 directions 
     if (currentShipHits.length > 1) move = orientationMode(map, size);
 
-    
     x = move[0];
     y = move[1];
 
@@ -361,11 +360,6 @@ function handleComputerMove(map, size, ships) {
     }
 }
 
-
-// keep track of last move
-// select a random possible corner move
-// keep track of vertical or horizontal
-// keep track of whether whole ship was sunk
 
 function sortArray(arr) {
     arr.sort((a, b) => {

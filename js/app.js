@@ -30,3 +30,8 @@ document.getElementById('play-again').addEventListener('click', () => {
 document.getElementById('settings').addEventListener('click', () => {
     document.querySelector('.settings').classList.toggle('hide');
 })
+
+
+document.getElementById('close-settings').addEventListener('click', () => {
+    document.querySelector('.settings').classList.toggle('hide');
+})
