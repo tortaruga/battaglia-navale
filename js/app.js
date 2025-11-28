@@ -1,10 +1,12 @@
-import { initializeEmptyBoard, placeShips, renderGameboard, reset, scoreBoard } from "./func.js";
+import { reset } from "./reset.js";
+import { renderGameboard, scoreBoard } from "./gameLogic.js";
+import { initializeEmptyBoard, placeShips } from "./initialize.js";
 import './modes.js'; 
 import { player1Map, player2Map, player1Ships, player2Ships, size } from "./variables.js";
 
 
 initializeEmptyBoard(player1Map, size); // create empty virtual board
-initializeEmptyBoard(player2Map, size); 
+initializeEmptyBoard(player2Map, size);  
 
 placeShips(player1Ships, player1Map, size); // place ships on random positions of virtual board
 placeShips(player2Ships, player2Map, size);

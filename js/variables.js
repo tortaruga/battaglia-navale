@@ -1,6 +1,13 @@
 export let player1Map = [];
 export const size = 10;
 
+// for computer's move logic
+export const computerLogicVars = {
+  currentShipHits: [],
+  newShipHits: {}, // { shipId: [[x,y], [x,y], ...] }
+  currentShip: null,
+};
+
 export const state = {
     mode: 'solo',
     playerTurn: 'player-1',

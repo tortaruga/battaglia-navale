@@ -1,5 +1,5 @@
 import { player1Map, player1Ships, player2Map, player2Ships, size, state } from "./variables.js";
-import { reset } from "./func.js";
+import { reset } from "./reset.js";
 
 document.querySelector('.mode').addEventListener('click', (e) => {
     if (e.target.id === 'solo') {
