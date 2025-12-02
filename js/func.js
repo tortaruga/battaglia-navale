@@ -52,7 +52,7 @@ export function handleGameOver() {
 
 // audio 
 export function soundEffect(hit) {
-    let audio = hit ? new Audio('../assets/audio/hit.mp3') : new Audio('../assets/audio/miss.mp3');
+    let audio = hit ? new Audio('./assets/audio/hit.mp3') : new Audio('./assets/audio/miss.mp3');
     
     if (isAudioOn()) audio.play();
 }
